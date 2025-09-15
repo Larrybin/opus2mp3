@@ -48,10 +48,37 @@ export class FFmpegConverter {
         this.loadingCallback(true, '正在初始化转换引擎...');
       }
 
-      // 使用CDN加载FFmpeg核心文件
-      const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
-      const coreURL = await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript');
-      const wasmURL = await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm');
+      // 使用多个CDN提供商，添加回退机制
+      const cdnProviders = [
+        'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd',
+        'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd',
+        'https://esm.sh/@ffmpeg/core@0.12.6/dist/umd'
+      ];
+
+      let coreURL: string | undefined;
+      let wasmURL: string | undefined;
+      let loadError: Error | null = null;
+
+      // 尝试从最快的CDN加载
+      for (const baseURL of cdnProviders) {
+        try {
+          console.log(`Attempting to load FFmpeg from ${baseURL}...`);
+          coreURL = await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript');
+          wasmURL = await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm');
+          console.log(`Successfully loaded from ${baseURL}`);
+          break;
+        } catch (error) {
+          console.warn(`Failed to load from ${baseURL}, trying next CDN...`);
+          loadError = error as Error;
+          if (baseURL === cdnProviders[cdnProviders.length - 1]) {
+            throw new Error(`Failed to load FFmpeg from all CDN providers: ${loadError.message}`);
+          }
+        }
+      }
+
+      if (!coreURL || !wasmURL) {
+        throw new Error('Failed to load FFmpeg core files from any CDN');
+      }
 
       await this.ffmpeg.load({
         coreURL,

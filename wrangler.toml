@@ -1,0 +1,21 @@
+name = "opus2mp3"
+compatibility_date = "2024-09-15"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
+
+[build]
+command = "npm run build"
+
+[build.upload]
+format = "service-worker"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "opus2mp3_cache"
+preview_id = "opus2mp3_cache_preview"
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+[env.preview]
+vars = { ENVIRONMENT = "preview" }

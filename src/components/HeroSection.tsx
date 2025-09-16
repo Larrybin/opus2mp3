@@ -5,25 +5,37 @@ import { ArrowRight, Zap, Shield, Sparkles } from 'lucide-react';
 
 export function HeroSection({ onScrollToConverter }: { onScrollToConverter: () => void }) {
   return (
-    <section className="relative w-full overflow-hidden bg-gradient-to-br from-white via-blue-50/20 to-white">
+    <header role="banner" className="relative w-full overflow-hidden bg-gradient-to-br from-white via-blue-50/20 to-white">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.02%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-60"></div>
 
       <div className="relative container mx-auto px-4 py-20 md:py-24 lg:py-32">
         <div className="text-center max-w-5xl mx-auto">
-          {/* Main Title */}
+          {/* 2025 Trust Signal Badge */}
           <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full">
             <Sparkles className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium text-blue-600">Lightning-Fast Audio Conversion</span>
+            <span className="text-sm font-medium text-blue-600">⚡ Instant Conversion • 🔒 100% Private • ✓ No Upload Required</span>
           </div>
 
-          <h1 className="mb-6 text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 tracking-tight">
-            🎵 QuickOpus2MP3
+          {/* SEO-Optimized H1 - Hidden for screen readers */}
+          <h1 className="sr-only">
+            OPUS to MP3 Converter - Free Online Audio Conversion Tool - QuickOpus2MP3
           </h1>
 
-          <p className="mb-12 text-xl md:text-2xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            Convert OPUS, OGG, and WebM audio files to MP3 format instantly,
-            right in your browser. No uploads, no waiting.
+          {/* Visual Title - Optimized for zero-click search */}
+          <div className="mb-6">
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 tracking-tight">
+              Convert OPUS to MP3
+            </h2>
+            <p className="text-2xl md:text-3xl font-semibold text-blue-600 mt-3">
+              QuickOpus2MP3 - Fast & Free
+            </p>
+          </div>
+
+          <p className="mb-12 text-xl md:text-2xl text-gray-600 leading-relaxed max-w-3xl mx-auto" itemProp="description">
+            Transform OPUS, OGG, and WebM audio files to MP3 instantly.
+            <br />
+            <strong className="text-gray-900">Zero upload, 100% browser-based, works offline.</strong>
           </p>
 
           {/* Value Propositions */}
@@ -73,6 +85,6 @@ export function HeroSection({ onScrollToConverter }: { onScrollToConverter: () =
           </div>
         </div>
       </div>
-    </section>
+    </header>
   );
 }

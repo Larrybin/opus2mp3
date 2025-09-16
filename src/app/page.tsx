@@ -285,16 +285,16 @@ export default function Home() {
               GitHub
             </a>
             <a
-              href="#"
+              href="/privacy"
               className="hover:text-white transition-colors"
             >
-              Privacy
+              Privacy Policy
             </a>
             <a
-              href="#"
+              href="/terms"
               className="hover:text-white transition-colors"
             >
-              Terms
+              Terms of Service
             </a>
           </div>
         </div>

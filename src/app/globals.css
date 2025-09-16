@@ -76,6 +76,35 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* New Design System Variables */
+  --primary-white: #FFFFFF;
+  --primary-black: #0A0A0A;
+  --text-primary: #1A1A1A;
+  --text-secondary: #6B7280;
+
+  /* Brand Accent Colors */
+  --accent-blue: #2563EB;
+  --accent-blue-hover: #1D4ED8;
+  --accent-green: #10B981;
+  --accent-red: #EF4444;
+
+  /* Background Colors */
+  --bg-light-gray: #F9FAFB;
+  --bg-card: #FFFFFF;
+  --border-color: #E5E7EB;
+
+  /* Typography */
+  --text-hero: 3rem;
+  --text-h2: 2rem;
+  --text-h3: 1.5rem;
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
 }
 
 .dark {

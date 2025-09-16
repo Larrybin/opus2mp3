@@ -2,13 +2,17 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { FileUploader } from '@/components/FileUploader';
+import { HeroSection } from '@/components/HeroSection';
+import { FeaturesGrid } from '@/components/FeaturesGrid';
+import { PainPoints } from '@/components/PainPoints';
+import { FAQ } from '@/components/FAQ';
 import { FFmpegConverter } from '@/lib/ffmpeg';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Download, Settings, Music, ChevronDown } from 'lucide-react';
+import { Download, Settings, ChevronDown, Sparkles } from 'lucide-react';
 
 export default function Home() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -21,6 +25,7 @@ export default function Home() {
   const [bitrate, setBitrate] = useState('192k');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const converterRef = useRef<FFmpegConverter | null>(null);
+  const converterSectionRef = useRef<HTMLDivElement>(null);
 
   // Initialize FFmpeg converter
   useEffect(() => {
@@ -40,6 +45,10 @@ export default function Home() {
       }
     };
   }, [downloadUrl]);
+
+  const scrollToConverter = () => {
+    converterSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const handleFileSelect = (file: File) => {
     setSelectedFile(file);
@@ -93,7 +102,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-white">
       {/* Fullscreen loading indicator */}
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
@@ -106,130 +115,181 @@ export default function Home() {
         </div>
       )}
 
-      <div className="container mx-auto px-4 py-8 max-w-3xl">
-        {/* Title section */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <Music className="w-12 h-12 text-blue-600 mr-3" />
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
-              QuickOpus2MP3
-            </h1>
-          </div>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
-            Convert OPUS/OGG/WebM audio to MP3 format online
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-            Processed entirely in your browser, no server upload required, protecting your privacy
-          </p>
-        </div>
+      {/* Hero Section */}
+      <HeroSection onScrollToConverter={scrollToConverter} />
 
-        {/* Main card */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Audio Converter</CardTitle>
-            <CardDescription>
-              Select an audio file to start conversion
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* File upload area */}
-            <FileUploader
-              onFileSelect={handleFileSelect}
-              disabled={isConverting}
-            />
+      {/* Features Grid */}
+      <FeaturesGrid />
 
-            {/* Advanced settings */}
-            {selectedFile && !downloadUrl && (
-              <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
-                <CollapsibleTrigger asChild>
-                  <Button variant="ghost" className="w-full justify-between">
-                    <span className="flex items-center">
-                      <Settings className="w-4 h-4 mr-2" />
-                      Advanced Settings
-                    </span>
-                    <ChevronDown className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
-                  </Button>
-                </CollapsibleTrigger>
-                <CollapsibleContent className="pt-4">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                        Audio Bitrate
-                      </label>
-                      <Select value={bitrate} onValueChange={setBitrate} disabled={isConverting}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="128k">128 kbps (Standard Quality)</SelectItem>
-                          <SelectItem value="192k">192 kbps (High Quality, Recommended)</SelectItem>
-                          <SelectItem value="320k">320 kbps (Highest Quality)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-            )}
-
-            {/* Progress bar */}
-            {isConverting && (
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span>Conversion Progress</span>
-                  <span>{progress}%</span>
-                </div>
-                <Progress value={progress} className="h-2" />
-              </div>
-            )}
-
-            {/* Error message */}
-            {error && (
-              <div className="p-4 bg-red-100 dark:bg-red-900 rounded-lg">
-                <p className="text-red-600 dark:text-red-200">{error}</p>
-              </div>
-            )}
-
-            {/* Action buttons */}
-            <div className="flex gap-3">
-              {!downloadUrl ? (
-                <Button
-                  onClick={handleConvert}
-                  disabled={!selectedFile || isConverting}
-                  className="flex-1"
-                >
-                  {isConverting ? 'Converting...' : 'Start Conversion'}
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    onClick={handleDownload}
-                    className="flex-1"
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    Download MP3
-                  </Button>
-                  <Button
-                    onClick={resetState}
-                    variant="outline"
-                  >
-                    Convert New File
-                  </Button>
-                </>
-              )}
+      {/* Main Converter Section */}
+      <section
+        ref={converterSectionRef}
+        id="converter"
+        className="py-20 md:py-24 lg:py-32 bg-gray-50"
+      >
+        <div className="container mx-auto px-4 max-w-4xl">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-4">
+              <Sparkles className="w-4 h-4 text-blue-600" />
+              <span className="text-sm font-medium text-blue-600">Ready to Convert</span>
             </div>
-          </CardContent>
-        </Card>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Convert Your Audio Files Now
+            </h2>
+            <p className="text-lg text-gray-600">
+              Upload your file and get started in seconds
+            </p>
+          </div>
 
-        {/* Instructions section */}
-        <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
-          <p>Supported formats: OPUS, OGG, WebM</p>
-          <p>Maximum file size: 100MB</p>
-          <p className="mt-2">
-            This tool uses FFmpeg.wasm for browser-based conversion, your files are not uploaded to any server
-          </p>
+          {/* Main Card */}
+          <Card className="shadow-xl border-0">
+            <CardHeader className="text-center pb-8">
+              <CardTitle className="text-2xl">Audio Converter</CardTitle>
+              <CardDescription className="text-base">
+                Select an audio file to start conversion
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6 pb-8">
+              {/* File upload area */}
+              <FileUploader
+                onFileSelect={handleFileSelect}
+                disabled={isConverting}
+              />
+
+              {/* Advanced settings */}
+              {selectedFile && !downloadUrl && (
+                <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
+                  <CollapsibleTrigger asChild>
+                    <Button variant="ghost" className="w-full justify-between hover:bg-gray-50">
+                      <span className="flex items-center">
+                        <Settings className="w-4 h-4 mr-2" />
+                        Advanced Settings
+                      </span>
+                      <ChevronDown className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="pt-4">
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 mb-2 block">
+                          Audio Bitrate
+                        </label>
+                        <Select value={bitrate} onValueChange={setBitrate} disabled={isConverting}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="128k">128 kbps (Standard Quality)</SelectItem>
+                            <SelectItem value="192k">192 kbps (High Quality, Recommended)</SelectItem>
+                            <SelectItem value="320k">320 kbps (Highest Quality)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              )}
+
+              {/* Progress bar */}
+              {isConverting && (
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span>Conversion Progress</span>
+                    <span>{progress}%</span>
+                  </div>
+                  <Progress value={progress} className="h-2" />
+                </div>
+              )}
+
+              {/* Error message */}
+              {error && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-600">{error}</p>
+                </div>
+              )}
+
+              {/* Action buttons */}
+              <div className="flex gap-3 pt-4">
+                {!downloadUrl ? (
+                  <Button
+                    onClick={handleConvert}
+                    disabled={!selectedFile || isConverting}
+                    className="flex-1 h-12 text-base bg-blue-600 hover:bg-blue-700"
+                  >
+                    {isConverting ? 'Converting...' : 'Start Conversion'}
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      onClick={handleDownload}
+                      className="flex-1 h-12 text-base bg-green-600 hover:bg-green-700"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download MP3
+                    </Button>
+                    <Button
+                      onClick={resetState}
+                      variant="outline"
+                      className="h-12"
+                    >
+                      Convert New File
+                    </Button>
+                  </>
+                )}
+              </div>
+
+              {/* Help text */}
+              {!selectedFile && (
+                <div className="text-center text-sm text-gray-500 pt-4 border-t">
+                  <p>Supported formats: OPUS, OGG, WebM • Maximum file size: 100MB</p>
+                  <p className="mt-1">
+                    Your files are processed locally and never uploaded to any server
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
-      </div>
+      </section>
+
+      {/* Pain Points Section */}
+      <PainPoints />
+
+      {/* FAQ Section */}
+      <FAQ />
+
+      {/* Footer */}
+      <footer className="py-12 bg-gray-900 text-gray-400">
+        <div className="container mx-auto px-4 text-center">
+          <p className="mb-4">© 2024 QuickOpus2MP3. All rights reserved.</p>
+          <p className="text-sm">
+            Built with ❤️ using Next.js and FFmpeg.wasm
+          </p>
+          <div className="mt-6 flex justify-center gap-6">
+            <a
+              href="https://github.com/Larrybin/opus2mp3"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              GitHub
+            </a>
+            <a
+              href="#"
+              className="hover:text-white transition-colors"
+            >
+              Privacy
+            </a>
+            <a
+              href="#"
+              className="hover:text-white transition-colors"
+            >
+              Terms
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

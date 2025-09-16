@@ -3,7 +3,6 @@
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload, X, FileAudio } from 'lucide-react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FFmpegConverter } from '@/lib/ffmpeg';
 
@@ -61,43 +60,91 @@ export function FileUploader({ onFileSelect, disabled }: FileUploaderProps) {
   return (
     <div className="w-full">
       {!selectedFile ? (
-        <Card
+        <div
           {...getRootProps()}
           className={`
-            border-2 border-dashed p-8 text-center cursor-pointer
-            transition-all duration-200
-            ${isDragActive ? 'border-blue-500 bg-blue-50 dark:bg-blue-950' : 'border-gray-300 hover:border-gray-400'}
+            relative overflow-hidden
+            border-2 border-dashed rounded-xl p-10 text-center cursor-pointer
+            transition-all duration-300
+            ${isDragActive
+              ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-white scale-105 shadow-lg'
+              : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50 hover:shadow-md'}
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
           `}
         >
           <input {...getInputProps()} />
-          <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-          {isDragActive ? (
-            <p className="text-lg font-medium text-blue-600 dark:text-blue-400">
-              Drop file to upload
-            </p>
-          ) : (
-            <>
-              <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
-                Drag audio file here, or click to select
-              </p>
-              <p className="mt-2 text-sm text-gray-500">
-                Supported formats: OPUS, OGG, WebM (max 100MB)
-              </p>
-            </>
-          )}
-        </Card>
-      ) : (
-        <Card className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <FileAudio className="w-8 h-8 text-blue-500" />
+
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="upload-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <circle cx="20" cy="20" r="1.5" fill="currentColor" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#upload-pattern)" />
+            </svg>
+          </div>
+
+          <div className="relative">
+            <div className="mb-4 inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full shadow-lg">
+              <Upload className="w-8 h-8 text-white" />
+            </div>
+
+            {isDragActive ? (
               <div>
-                <p className="font-medium text-gray-900 dark:text-gray-100">
+                <p className="text-xl font-semibold text-blue-600 mb-2">
+                  Drop your file here!
+                </p>
+                <p className="text-sm text-gray-600">
+                  Release to start conversion
+                </p>
+              </div>
+            ) : (
+              <>
+                <p className="text-xl font-semibold text-gray-800 mb-2">
+                  Upload Audio File
+                </p>
+                <p className="text-base text-gray-600 mb-4">
+                  Drag & drop or click to browse
+                </p>
+                <div className="inline-flex items-center gap-4 text-sm text-gray-500">
+                  <span className="flex items-center gap-1">
+                    <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    OPUS
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    OGG
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    WebM
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="relative bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 border border-blue-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md">
+                <FileAudio className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900 text-lg">
                   {selectedFile.name}
                 </p>
-                <p className="text-sm text-gray-500">
-                  {FFmpegConverter.formatFileSize(selectedFile.size)}
+                <p className="text-sm text-gray-600 mt-1">
+                  Size: {FFmpegConverter.formatFileSize(selectedFile.size)}
                 </p>
               </div>
             </div>
@@ -106,16 +153,30 @@ export function FileUploader({ onFileSelect, disabled }: FileUploaderProps) {
               size="sm"
               onClick={removeFile}
               disabled={disabled}
+              className="hover:bg-red-50 hover:text-red-600 transition-colors"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </Button>
           </div>
-        </Card>
+
+          {/* Ready indicator */}
+          <div className="mt-4 flex items-center gap-2 text-sm text-green-600">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <span className="font-medium">Ready for conversion</span>
+          </div>
+        </div>
       )}
 
       {error && (
-        <div className="mt-4 p-3 bg-red-100 dark:bg-red-900 rounded-md">
-          <p className="text-sm text-red-600 dark:text-red-200">{error}</p>
+        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl">
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <p className="text-sm text-red-700">{error}</p>
+          </div>
         </div>
       )}
     </div>

@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "QuickOpus2MP3 - 在线音频转换器",
-  description: "免费在线将 OPUS, OGG, WebM 音频转换为 MP3 格式。完全在浏览器中处理，保护您的隐私。",
-  keywords: "opus to mp3, ogg to mp3, webm to mp3, audio converter, 音频转换器",
+  title: "QuickOpus2MP3 - Online Audio Converter",
+  description: "Free online converter for OPUS, OGG, WebM audio to MP3 format. Processed entirely in browser, protecting your privacy.",
+  keywords: "opus to mp3, ogg to mp3, webm to mp3, audio converter, online audio converter",
 };
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

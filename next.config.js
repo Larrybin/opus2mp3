@@ -1,14 +1,26 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Cloudflare Pages 优化配置
-  output: 'standalone',
+  webpack: (config, { isServer }) => {
+    // 添加对WebAssembly的支持
+    config.experiments = {
+      ...config.experiments,
+      asyncWebAssembly: true,
+      layers: true,
+    };
 
-  // 禁用图片优化（Cloudflare Pages 不支持）
-  images: {
-    unoptimized: true,
+    // 处理Node.js模块的fallback
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        crypto: false,
+      };
+    }
+
+    return config;
   },
-
-  // 保留必要的 CORS headers
+  // 配置跨域资源共享（用于加载ffmpeg wasm文件）
   async headers() {
     return [
       {
@@ -25,14 +37,6 @@ const nextConfig = {
         ],
       },
     ];
-  },
-
-
-  // 确保客户端组件正确打包
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '10mb',
-    },
   },
 };
 

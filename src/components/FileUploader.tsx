@@ -25,15 +25,15 @@ export function FileUploader({ onFileSelect, disabled }: FileUploaderProps) {
 
     const file = acceptedFiles[0];
 
-    // 验证文件格式
+    // Validate file format
     if (!FFmpegConverter.isValidFormat(file.name)) {
-      setError('不支持的文件格式。请上传 .opus, .ogg 或 .webm 文件。');
+      setError('Unsupported file format. Please upload .opus, .ogg or .webm files.');
       return;
     }
 
-    // 验证文件大小
+    // Validate file size
     if (!FFmpegConverter.isValidSize(file.size)) {
-      setError('文件太大。最大支持 100MB。');
+      setError('File too large. Maximum size is 100MB.');
       return;
     }
 
@@ -74,15 +74,15 @@ export function FileUploader({ onFileSelect, disabled }: FileUploaderProps) {
           <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
           {isDragActive ? (
             <p className="text-lg font-medium text-blue-600 dark:text-blue-400">
-              释放文件以上传
+              Drop file to upload
             </p>
           ) : (
             <>
               <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
-                拖拽音频文件到这里，或点击选择
+                Drag audio file here, or click to select
               </p>
               <p className="mt-2 text-sm text-gray-500">
-                支持格式：OPUS, OGG, WebM（最大 100MB）
+                Supported formats: OPUS, OGG, WebM (max 100MB)
               </p>
             </>
           )}

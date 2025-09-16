@@ -22,7 +22,7 @@ export default function Home() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const converterRef = useRef<FFmpegConverter | null>(null);
 
-  // 初始化FFmpeg转换器
+  // Initialize FFmpeg converter
   useEffect(() => {
     converterRef.current = new FFmpegConverter();
     converterRef.current.setProgressCallback(setProgress);
@@ -56,15 +56,15 @@ export default function Home() {
     setDownloadUrl('');
 
     try {
-      // 执行转换
+      // Execute conversion
       const outputData = await converterRef.current.convertFile(selectedFile, bitrate);
 
-      // 创建下载链接
+      // Create download link
       const blob = new Blob([new Uint8Array(outputData)], { type: 'audio/mpeg' });
       const url = URL.createObjectURL(blob);
       setDownloadUrl(url);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '转换失败，请重试');
+      setError(err instanceof Error ? err.message : 'Conversion failed, please try again');
       setProgress(0);
     } finally {
       setIsConverting(false);
@@ -94,7 +94,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* 全屏加载提示 */}
+      {/* Fullscreen loading indicator */}
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
           <Card className="p-6">
@@ -107,7 +107,7 @@ export default function Home() {
       )}
 
       <div className="container mx-auto px-4 py-8 max-w-3xl">
-        {/* 标题部分 */}
+        {/* Title section */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <Music className="w-12 h-12 text-blue-600 mr-3" />
@@ -116,36 +116,36 @@ export default function Home() {
             </h1>
           </div>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            在线将 OPUS/OGG/WebM 音频转换为 MP3 格式
+            Convert OPUS/OGG/WebM audio to MP3 format online
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-            完全在浏览器中处理，无需上传到服务器，保护您的隐私
+            Processed entirely in your browser, no server upload required, protecting your privacy
           </p>
         </div>
 
-        {/* 主卡片 */}
+        {/* Main card */}
         <Card>
           <CardHeader>
-            <CardTitle>音频转换器</CardTitle>
+            <CardTitle>Audio Converter</CardTitle>
             <CardDescription>
-              选择一个音频文件开始转换
+              Select an audio file to start conversion
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* 文件上传区域 */}
+            {/* File upload area */}
             <FileUploader
               onFileSelect={handleFileSelect}
               disabled={isConverting}
             />
 
-            {/* 高级设置 */}
+            {/* Advanced settings */}
             {selectedFile && !downloadUrl && (
               <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
                 <CollapsibleTrigger asChild>
                   <Button variant="ghost" className="w-full justify-between">
                     <span className="flex items-center">
                       <Settings className="w-4 h-4 mr-2" />
-                      高级设置
+                      Advanced Settings
                     </span>
                     <ChevronDown className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
                   </Button>
@@ -154,16 +154,16 @@ export default function Home() {
                   <div className="space-y-4">
                     <div>
                       <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                        音频比特率
+                        Audio Bitrate
                       </label>
                       <Select value={bitrate} onValueChange={setBitrate} disabled={isConverting}>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="128k">128 kbps（标准质量）</SelectItem>
-                          <SelectItem value="192k">192 kbps（高质量，推荐）</SelectItem>
-                          <SelectItem value="320k">320 kbps（最高质量）</SelectItem>
+                          <SelectItem value="128k">128 kbps (Standard Quality)</SelectItem>
+                          <SelectItem value="192k">192 kbps (High Quality, Recommended)</SelectItem>
+                          <SelectItem value="320k">320 kbps (Highest Quality)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -172,25 +172,25 @@ export default function Home() {
               </Collapsible>
             )}
 
-            {/* 进度条 */}
+            {/* Progress bar */}
             {isConverting && (
               <div className="space-y-2">
                 <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span>转换进度</span>
+                  <span>Conversion Progress</span>
                   <span>{progress}%</span>
                 </div>
                 <Progress value={progress} className="h-2" />
               </div>
             )}
 
-            {/* 错误提示 */}
+            {/* Error message */}
             {error && (
               <div className="p-4 bg-red-100 dark:bg-red-900 rounded-lg">
                 <p className="text-red-600 dark:text-red-200">{error}</p>
               </div>
             )}
 
-            {/* 操作按钮 */}
+            {/* Action buttons */}
             <div className="flex gap-3">
               {!downloadUrl ? (
                 <Button
@@ -198,7 +198,7 @@ export default function Home() {
                   disabled={!selectedFile || isConverting}
                   className="flex-1"
                 >
-                  {isConverting ? '转换中...' : '开始转换'}
+                  {isConverting ? 'Converting...' : 'Start Conversion'}
                 </Button>
               ) : (
                 <>
@@ -207,13 +207,13 @@ export default function Home() {
                     className="flex-1"
                   >
                     <Download className="w-4 h-4 mr-2" />
-                    下载 MP3
+                    Download MP3
                   </Button>
                   <Button
                     onClick={resetState}
                     variant="outline"
                   >
-                    转换新文件
+                    Convert New File
                   </Button>
                 </>
               )}
@@ -221,12 +221,12 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        {/* 说明部分 */}
+        {/* Instructions section */}
         <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
-          <p>支持的格式：OPUS, OGG, WebM</p>
-          <p>最大文件大小：100MB</p>
+          <p>Supported formats: OPUS, OGG, WebM</p>
+          <p>Maximum file size: 100MB</p>
           <p className="mt-2">
-            本工具使用 FFmpeg.wasm 在浏览器中进行转换，您的文件不会上传到任何服务器
+            This tool uses FFmpeg.wasm for browser-based conversion, your files are not uploaded to any server
           </p>
         </div>
       </div>
